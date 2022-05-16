@@ -166,3 +166,27 @@ describe('PATCH/api/reviews/:review_id', () => {
     });
 
 });
+describe('GET /api/users', () => {
+    it('200: responds with an array of user objects', () => {
+        return request(app).get('/api/users').expect(200)
+        .then(response => {
+            expect(response.body.length).toBe(4);
+            expect(Array.isArray(response.body)).toBe(true);
+
+            response.body.forEach(category => {
+                expect.objectContaining({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                })
+            })
+        })
+        
+    });
+    it('404: "Route not found" message when given incorrect url', () => {
+        return request(app).get('/api/thisisnotauserssection').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Route not found'})
+        })
+    });
+});

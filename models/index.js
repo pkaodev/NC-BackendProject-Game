@@ -5,6 +5,6 @@ const {fetchReviewById, updateReviewVotes} = require('./reviews.model')
 //categories
 const {fetchCategories} = require('./categories.model')
 //users
+const {fetchUsers} = require('./users.model')
 
-
-module.exports = {fetchReviewById, fetchCategories, updateReviewVotes};
+module.exports = {fetchReviewById, fetchCategories, updateReviewVotes, fetchUsers};
