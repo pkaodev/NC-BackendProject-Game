@@ -1,5 +1,7 @@
 const express = require('express');
 
+
+//import controllers
 const {getCategories, getReviewById} = require('./controllers');
 
 const app = express();

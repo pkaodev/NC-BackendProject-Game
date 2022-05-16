@@ -5,7 +5,7 @@ const request = require('supertest')
 
 const db = require('../db/connection')
 const seed = require('../db/seeds/seed')
-const app = require('../app-controllers-models/app')
+const app = require('../app')
 const testData = require('../db/data/test-data')
 
 beforeEach(() => {
