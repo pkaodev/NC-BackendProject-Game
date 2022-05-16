@@ -16,14 +16,7 @@ afterAll(() => {
     return db.end();
 });
 
-
-// describe('500: Server error', () => {
-//     it('should ', () => {
-        
-//     });
-// });
-
-describe.only('GET/api/categories', () => {
+describe('GET/api/categories', () => {
     it('200: responds with array of category objects with slug and description properties', () => {
         return request(app).get('/api/categories').expect(200)
         .then(response => {
@@ -40,7 +33,10 @@ describe.only('GET/api/categories', () => {
         
     });
 
-    it('404: incorrect url', () => {
-        return request(app).get('/api/nocategorieshereboss').expect(404);
+    it('404: with "404: Route not found" message', () => {
+        return request(app).get('/api/nocategorieshereboss').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: '404: Route not found'})
+        })
     });
 });
