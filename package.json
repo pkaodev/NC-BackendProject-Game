@@ -8,8 +8,9 @@
     "playground": "psql -f ./PLAYGROUND/input.sql > ./PLAYGROUND/output.txt",
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
-    "test": "jest",
-    "prepare": "husky install"
+    "test": "clear && jest ./__tests__/app.test.js",
+    "prepare": "husky install",
+    "insomtest": "nodemon ./app-controllers-models/app.js"
   },
   "repository": {
     "type": "git",
