@@ -2,18 +2,21 @@ const express = require('express');
 
 
 //import controllers
-const {getCategories, getReviewById} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes} = require('./controllers');
 
 const app = express();
 
 //potentially useful later on
-// app.use(express.json());
+app.use(express.json());
 
 //#3 Responds with an array of category objects with slug and description properties
 app.get('/api/categories', getCategories)
 
 //#4
 app.get('/api/reviews/:review_id', getReviewById)
+
+//#5
+app.patch('/api/reviews/:review_id', patchReviewVotes)
 
 
 //error handler for incorrect url (404: Route not found)

@@ -62,13 +62,99 @@ describe('GET/api/reviews/:review_id', () => {
     it('404: "404: ID Out Of Range" when given out of range number for :review_id', () => {
         return request(app).get('/api/reviews/12345').expect(404)
         .then(response => {
-            expect(JSON.parse(response.text)).toEqual({msg: '404: ID Out Of Range'})
+            expect(JSON.parse(response.text)).toEqual({msg: '404: ID Out Of Range'});
         })
     });
     it('400: "400: Invalid ID Format" when given any non-number character for :review_id', () => {
         return request(app).get('/api/reviews/notanumber').expect(400)
         .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: '400: Invalid ID Format'});
+        })
+    });
+});
+describe('PATCH/api/reviews/:review_id', () => {
+    it('200: updates and responds with updated +reviewed object', () => {
+        // const sentObj = {inc_votes: 7};
+        const expectedObj = {review: {
+            review_id: 1,
+            title: 'Agricola',
+            designer: 'Uwe Rosenberg',
+            owner: 'mallionaire',
+            review_img_url:
+              'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+            review_body: 'Farmyard fun!',
+            category: 'euro game',
+            created_at: "2021-01-18T10:00:20.514Z",
+            votes: 8
+        }};
+
+        return request(app)
+        .patch('/api/reviews/1')
+        .send({ inc_votes: 7 })
+        .expect(200)
+        .then(response => {
+            expect(response.body).toEqual(expectedObj);
+        })
+    });
+    it('200: updates and responds with updated -reviewed object', () => {
+        const sentObj = {inc_votes: -7};
+        const expectedObj = {review: {
+            review_id: 1,
+            title: 'Agricola',
+            designer: 'Uwe Rosenberg',
+            owner: 'mallionaire',
+            review_img_url:
+              'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+            review_body: 'Farmyard fun!',
+            category: 'euro game',
+            created_at: "2021-01-18T10:00:20.514Z",
+            votes: -6
+        }};
+
+        return request(app).patch('/api/reviews/1').send(sentObj).expect(200)
+        .then(response => {
+            expect(response.body).toEqual(expectedObj);
+        })
+    });
+    it('200: updates and responds with updated 0reviewed object', () => {
+        const sentObj = {inc_votes: 0};
+        const expectedObj = {review: {
+            review_id: 1,
+            title: 'Agricola',
+            designer: 'Uwe Rosenberg',
+            owner: 'mallionaire',
+            review_img_url:
+              'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+            review_body: 'Farmyard fun!',
+            category: 'euro game',
+            created_at: "2021-01-18T10:00:20.514Z",
+            votes: 1
+        }};
+
+        return request(app).patch('/api/reviews/1').send(sentObj).expect(200)
+        .then(response => {
+            expect(response.body).toEqual(expectedObj);
+        })
+    });
+    it('404: "404: ID Out Of Range" when given out of range number for :review_id', () => {
+        const sentObj = {inc_votes: 1};
+        return request(app).patch('/api/reviews/12345').send(sentObj).expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: '404: ID Out Of Range'});
+        })
+    });
+    it('400: "400: Invalid ID Format" when given any non-number character for :review_id', () => {
+        const sentObj = {inc_votes: -7};
+        return request(app).patch('/api/reviews/notanumber').send(sentObj).expect(400)
+        .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: '400: Invalid ID Format'})
+        })
+    });
+    it('400: "400: Invalid Vote Format" when given any non-integer in request object ', () => {
+        const sentObj = {inc_votes: 'like a string'};
+        return request(app).patch('/api/reviews/1').send(sentObj).expect(400)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: '400: Invalid Vote Format'})
         })
     });
 });
