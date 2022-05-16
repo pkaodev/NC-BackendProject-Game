@@ -1,7 +1,5 @@
-
 # NC-BackendProject-Game
 Backend project (game version) for NC bootcamp
-
 ##Before running
 Local .env files must be created to connect with local databases:
 <ul>
@@ -9,6 +7,4 @@ Local .env files must be created to connect with local databases:
   <li>enter the following in each file (without the ''s):</li>
         PGDATABASE='database name here'
 </ul>
-
-database names can be found in the setup.sql file.
-<br>
+Database names can be found in the setup.sql file.
