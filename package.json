@@ -21,13 +21,18 @@
   },
   "homepage": "https://github.com/northcoders/be-nc-games#readme",
   "dependencies": {
+    "express": "^4.18.1",
+    "husky": "^7.0.0",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
+    "lodash": "^4.17.21",
+    "nodemon": "^2.0.16",
     "pg-format": "^1.0.4",
-    "husky": "^7.0.0"
+    "supertest": "^6.2.3"
   },
   "devDependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
+    "jest-sorted": "^1.0.14",
     "pg": "^8.7.3"
   },
   "jest": {
