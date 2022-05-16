@@ -3,18 +3,12 @@ const db = require('../db/connection')
 //#4
 exports.fetchReviewById = ({review_id}) => {
 
-    //reject promise if :review_id contains non-numbers
-    if (/[^\d]/.test(review_id)) {
-        return Promise.reject({status: 400, msg: '400: Invalid ID Format'});
-    }
-
-
     return db.query('SELECT * FROM reviews WHERE review_id = $1', [review_id])
     .then(result => {
 
         //reject promise if :review_id is out of range (result array is empty)
         if (result.rows.length === 0) {
-            return Promise.reject({status: 404, msg: '404: ID Out Of Range'});
+            return Promise.reject({status: 404, msg: 'ID Not Found'});
         }
 
         return result.rows[0];
@@ -23,22 +17,20 @@ exports.fetchReviewById = ({review_id}) => {
 
 //#5
 updateReviewVotes = ({review_id}, {inc_votes}) => {
-    //reject promise if :review_id contains non-numbers
-    if (/[^\d]/.test(review_id)) {
-        return Promise.reject({status: 400, msg: '400: Invalid ID Format'});
-    //or non-number
-    } else if (typeof inc_votes !== 'number') {
-        return Promise.reject({status: 400, msg: '400: Invalid Vote Format'});
-    }
+    
+    //reject promise if :review_id is a non-number
+    // if (typeof inc_votes !== 'number') {
+    //     return Promise.reject({status: 400, msg: 'Invalid Vote Format'});
+    // }
 
-
-    return db.query('SELECT * FROM reviews WHERE review_id = $1', [review_id])
+    // return db.query('SELECT * FROM reviews WHERE review_id = $1', [review_id])
+   
+    return db.query('UPDATE reviews SET votes = votes + $1 WHERE review_id = $2 RETURNING *', [inc_votes, review_id])
     .then(result => {
         //reject promise if :review_id is out of range (result array is empty)
         if (result.rows.length === 0) {
-            return Promise.reject({status: 404, msg: '404: ID Out Of Range'});
+            return Promise.reject({status: 404, msg: 'ID Not Found'});
         }
-        result.rows[0].votes += inc_votes;
         return result.rows[0];
     })
 }
