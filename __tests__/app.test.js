@@ -1,6 +1,7 @@
 process.env.NODE_ENV = "test";
 
 const request = require('supertest')
+require('jest-sorted')
 
 
 const db = require('../db/connection')
@@ -16,6 +17,7 @@ afterAll(() => {
     return db.end();
 });
 
+//#3
 describe('GET/api/categories', () => {
     it('200: responds with a categories object containing an array of category objects with slug and description properties', () => {
         return request(app).get('/api/categories').expect(200)
@@ -41,11 +43,13 @@ describe('GET/api/categories', () => {
         })
     });
 });
+//#4
 describe('GET/api/reviews/:review_id', () => {
     it('200: responds with review object from given :review_id', () => {
         return request(app).get('/api/reviews/1').expect(200)
-        .then(response => {
-            const expectedObj = {review: {
+        .then(( {body}) => {
+
+            expect(body.review).toEqual(expect.objectContaining({
                 review_id: 1,
                 title: 'Agricola',
                 designer: 'Uwe Rosenberg',
@@ -56,8 +60,7 @@ describe('GET/api/reviews/:review_id', () => {
                 category: 'euro game',
                 created_at: "2021-01-18T10:00:20.514Z",
                 votes: 1
-            }};
-            expect(response.body).toEqual(expectedObj);
+            }));
         })
     });
     it('404: "ID Not Found" when given unusede number for :review_id', () => {
@@ -73,68 +76,39 @@ describe('GET/api/reviews/:review_id', () => {
         })
     });
 });
+//#5
 describe('PATCH/api/reviews/:review_id', () => {
     it('200: updates and responds with updated +reviewed object', () => {
         const sentObj = {inc_votes: 7};
-        const expectedObj = {review: {
-            review_id: 1,
-            title: 'Agricola',
-            designer: 'Uwe Rosenberg',
-            owner: 'mallionaire',
-            review_img_url:
-              'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-            review_body: 'Farmyard fun!',
-            category: 'euro game',
-            created_at: "2021-01-18T10:00:20.514Z",
-            votes: 8
-        }};
 
         return request(app)
         .patch('/api/reviews/1')
         .send(sentObj)
         .expect(200)
-        .then(response => {
-            expect(response.body).toEqual(expectedObj);
+        .then( ({body}) => {
+            expect(body.review).toEqual(expect.objectContaining({
+                votes: 8
+            }));
         })
     });
     it('200: updates and responds with updated -reviewed object', () => {
         const sentObj = {inc_votes: -7};
-        const expectedObj = {review: {
-            review_id: 1,
-            title: 'Agricola',
-            designer: 'Uwe Rosenberg',
-            owner: 'mallionaire',
-            review_img_url:
-              'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-            review_body: 'Farmyard fun!',
-            category: 'euro game',
-            created_at: "2021-01-18T10:00:20.514Z",
-            votes: -6
-        }};
 
         return request(app).patch('/api/reviews/1').send(sentObj).expect(200)
-        .then(response => {
-            expect(response.body).toEqual(expectedObj);
+        .then( ({body}) => {
+            expect(body.review).toEqual(expect.objectContaining({
+                votes: -6
+            }));
         })
     });
     it('200: updates and responds with updated 0reviewed object', () => {
         const sentObj = {inc_votes: 0};
-        const expectedObj = {review: {
-            review_id: 1,
-            title: 'Agricola',
-            designer: 'Uwe Rosenberg',
-            owner: 'mallionaire',
-            review_img_url:
-              'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-            review_body: 'Farmyard fun!',
-            category: 'euro game',
-            created_at: "2021-01-18T10:00:20.514Z",
-            votes: 1
-        }};
 
         return request(app).patch('/api/reviews/1').send(sentObj).expect(200)
-        .then(response => {
-            expect(response.body).toEqual(expectedObj);
+        .then( ({body}) => {
+            expect(body.review).toEqual(expect.objectContaining({
+                votes: 1
+            }));
         })
     });
     it('404: "ID Not Found" when given unused number for :review_id', () => {
@@ -167,6 +141,7 @@ describe('PATCH/api/reviews/:review_id', () => {
     });
 
 });
+//#6
 describe('GET /api/users', () => {
     it('200: responds with a users object containing an array of user objects', () => {
         return request(app).get('/api/users').expect(200)
@@ -191,4 +166,13 @@ describe('GET /api/users', () => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Route not found'})
         })
     });
+});
+//#7
+describe('Refactor: GET/api/reviews/:review_id to include comment count', () => {
+    it('200: responds with review object from given :review_id including a comment_count', () => {
+        return request(app).get('/api/reviews/2').expect(200)
+        .then(( {body} )=> {
+            expect(body.review.comment_count).toBe(3);
+        })
+    })
 });

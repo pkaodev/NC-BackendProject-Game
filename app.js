@@ -27,6 +27,14 @@ app.all('/*', (req, res) => {
     res.status(404).send({msg: 'Route not found'});
   });
 
+
+//error  helper
+// app.use((err, req, res, next) => {
+//     console.log(err)
+//     next(err)
+// })
+
+
 //error handler for postgres errors
 app.use((err, req, res, next) => {
     switch (err.code) {
