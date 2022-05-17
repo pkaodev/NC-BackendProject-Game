@@ -17,13 +17,14 @@ afterAll(() => {
 });
 
 describe('GET/api/categories', () => {
-    it('200: responds with array of category objects with slug and description properties', () => {
+    it('200: responds with a categories object containing an array of category objects with slug and description properties', () => {
         return request(app).get('/api/categories').expect(200)
-        .then(response => {
-            expect(response.body.length).toBe(4);
-            expect(Array.isArray(response.body)).toBe(true);
+        .then( ({body}) => {
+            const {categories} = body;
+            expect(categories.length).toBe(4);
+            expect(Array.isArray(categories)).toBe(true);
 
-            response.body.forEach(category => {
+            categories.forEach(category => {
                 expect.objectContaining({
                     slug: expect.any(String),
                     descrpition: expect.any(String)
@@ -167,13 +168,14 @@ describe('PATCH/api/reviews/:review_id', () => {
 
 });
 describe('GET /api/users', () => {
-    it('200: responds with an array of user objects', () => {
+    it('200: responds with a users object containing an array of user objects', () => {
         return request(app).get('/api/users').expect(200)
-        .then(response => {
-            expect(response.body.length).toBe(4);
-            expect(Array.isArray(response.body)).toBe(true);
+        .then(({body}) => {
+            const {users} = body;
+            expect(users.length).toBe(4);
+            expect(Array.isArray(users)).toBe(true);
 
-            response.body.forEach(category => {
+            users.forEach(category => {
                 expect.objectContaining({
                     username: expect.any(String),
                     name: expect.any(String),
