@@ -176,3 +176,37 @@ describe('Refactor: GET/api/reviews/:review_id to include comment count', () => 
         })
     })
 });
+//#8
+describe('GET/api/reviews', () => {
+    it('200: responds with a reviews object containing an array of review objects sorted in descending order by date', () => {
+        return request(app).get('/api/reviews').expect(200)
+        .then( ({body}) => {
+            const {reviews} = body;
+            expect(reviews.length).toBe(13);
+            expect(Array.isArray(reviews)).toBe(true);
+
+            reviews.forEach(review => {
+                expect.objectContaining({
+                    title: expect.any(String),
+                    designer: expect.any(String),
+                    owner: expect.any(String),
+                    review_img_url:expect.any(String),
+                    review_body:expect.any(String),
+                    review: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    comment_count: expect.any(Number)
+                })
+            })
+            expect(reviews).toBeSortedBy('created_at', {descending: true})
+        })
+        
+    });
+
+    it('404: "Route not found" message when given incorrect url', () => {
+        return request(app).get('/api/noreviewshereboss').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Route not found'})
+        })
+    });
+});

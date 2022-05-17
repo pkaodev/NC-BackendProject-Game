@@ -27,6 +27,14 @@ exports.fetchReviewById = ({review_id}) => {
 // }
 
 //#5
-updateReviewVotes = ({review_id}, {inc_votes}) => {
+exports.updateReviewVotes = ({review_id}, {inc_votes}) => {
     return db.query('UPDATE reviews SET votes = votes + $1 WHERE review_id = $2;', [inc_votes, review_id]);
+}
+
+//#8
+exports.fetchReviews = () => {
+    return db.query('SELECT * FROM reviews ORDER BY created_at DESC')
+    .then(result => {
+        return result.rows
+    })
 }
