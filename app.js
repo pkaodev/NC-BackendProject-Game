@@ -2,7 +2,7 @@ const express = require('express');
 
 
 //import controllers
-const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview} = require('./controllers');
 
 const app = express();
 
@@ -24,6 +24,9 @@ app.get('/api/users', getUsers);
 //#8
 app.get('/api/reviews', getReviews);
 
+//#9
+app.get('/api/reviews/:review_id/comments', getCommentsForReview);
+
 
 //error handler for incorrect url (404: Route not found)
 app.all('/*', (req, res) => {
@@ -32,11 +35,11 @@ app.all('/*', (req, res) => {
 
 
 // error  helper
-// app.use((err, req, res, next) => {
-//     console.log('ERROR HELP IS HERE!')
-//     console.log(err)
-//     next(err)
-// })
+app.use((err, req, res, next) => {
+    console.log('ERROR HELP IS HERE!')
+    console.log(err)
+    next(err)
+})
 
 
 //error handler for postgres errors

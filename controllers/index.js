@@ -1,10 +1,10 @@
 //reviews
 const {getReviewById, patchReviewVotes, getReviews} = require('./reviews.controller')
 //comments
-
+const {getCommentsForReview} = require('./comments.controller')
 //categories
 const {getCategories} = require('./categories.controller')
 //users
 const {getUsers} = require('./users.controller')
 
-module.exports = {getReviewById, getCategories, patchReviewVotes, getUsers, getReviews};
+module.exports = {getReviewById, getCategories, patchReviewVotes, getUsers, getReviews, getCommentsForReview};

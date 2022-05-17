@@ -1,23 +1,23 @@
 const db = require('../db/connection')
 
-//takes review_id as argument and RETURNS PROMISE returning comment_count
-// exports.fetchCommentsCount = ({review_id}) => {
-//     return db.query('SELECT * FROM comments WHERE review_id=$1;', [review_id])
-//     .then( response => {
-//         // console.log('From fetchCommentsCount', response.rows.length)
-//         return response.rows.length;
-//     })
-// }
+exports.fetchCommentsForReview = ({review_id}) => {
+    console.log(review_id)
 
 
-//DEPRECATED(but want to keep for reference)returns promise returning look-up object for {review_id: comment_count} pairs for all reviews 
-// exports.fetchCCLookUp = () => {
-//     return db.query('SELECT * FROM comments')
-//     .then( (result) => {
-//         const lookUpObj = {};
+    // const checkIfValidReviewId = async (review_id) => {
+    //     const isValidId = await db.query('SELECT * FROM reviews WHERE review_id = $1', [review_id])
 
-//         result.rows.forEach(comment => {lookUpObj[`${comment.review_id}`] ? lookUpObj[`${comment.review_id}`] ++ : lookUpObj[`${comment.review_id}`] = 1;})
+    //     console.log('wow')
+    //     console.log(isValidId.rows)
+    // };
 
-//         return lookUpObj;
-//     })
-// }
+
+    return db.query('SELECT * FROM comments WHERE review_id = $1;', [review_id])
+    .then( (comments) => {
+        //if no comments return 200 No Comments Found
+        if (!comments.rows.length) {
+            return Promise.reject({status: 200, msg: 'No Comments Found'})
+        }
+        return comments.rows;
+    })
+}
