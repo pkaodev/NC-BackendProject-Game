@@ -2,7 +2,7 @@ const express = require('express');
 
 
 //import controllers
-const {getCategories, getReviewById, patchReviewVotes, getUsers} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews} = require('./controllers');
 
 const app = express();
 
@@ -21,6 +21,9 @@ app.patch('/api/reviews/:review_id', patchReviewVotes);
 //#6
 app.get('/api/users', getUsers);
 
+//#8
+app.get('/api/reviews', getReviews);
+
 
 //error handler for incorrect url (404: Route not found)
 app.all('/*', (req, res) => {
@@ -28,8 +31,9 @@ app.all('/*', (req, res) => {
   });
 
 
-//error  helper
+// error  helper
 // app.use((err, req, res, next) => {
+//     console.log('ERROR HELP IS HERE!')
 //     console.log(err)
 //     next(err)
 // })

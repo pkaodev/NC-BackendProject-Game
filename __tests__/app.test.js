@@ -47,9 +47,10 @@ describe('GET/api/categories', () => {
 describe('GET/api/reviews/:review_id', () => {
     it('200: responds with review object from given :review_id', () => {
         return request(app).get('/api/reviews/1').expect(200)
-        .then(( {body}) => {
+        .then( ({body}) => {
+            const {review} = body;
 
-            expect(body.review).toEqual(expect.objectContaining({
+            expect(review).toEqual(expect.objectContaining({
                 review_id: 1,
                 title: 'Agricola',
                 designer: 'Uwe Rosenberg',
@@ -175,4 +176,36 @@ describe('Refactor: GET/api/reviews/:review_id to include comment count', () => 
             expect(body.review.comment_count).toBe(3);
         })
     })
+});
+//#8
+describe('GET/api/reviews', () => {
+    it('200: responds with a reviews object containing an array of review objects sorted in descending order by date', () => {
+        return request(app).get('/api/reviews').expect(200)
+        .then( ({body}) => {
+            const {reviews} = body;
+            expect(reviews.length).toBe(13);
+            expect(Array.isArray(reviews)).toBe(true);
+
+            reviews.forEach( (review) => {
+                expect(review).toEqual(expect.objectContaining({
+                    owner: expect.any(String), //username from users table, same as author from comments table
+                    title: expect.any(String),
+                    review_id: expect.any(Number),
+                    category: expect.any(String),
+                    review_img_url:expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    comment_count: expect.any(Number)
+                }))
+
+            })
+            expect(reviews).toBeSortedBy('created_at', {descending: true})
+        })
+    });
+    it('404: "Route not found" message when given incorrect url', () => {
+        return request(app).get('/api/noreviewshereboss').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Route not found'})
+        })
+    });
 });
