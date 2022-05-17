@@ -47,9 +47,10 @@ describe('GET/api/categories', () => {
 describe('GET/api/reviews/:review_id', () => {
     it('200: responds with review object from given :review_id', () => {
         return request(app).get('/api/reviews/1').expect(200)
-        .then(( {body}) => {
+        .then( ({body}) => {
+            const {review} = body;
 
-            expect(body.review).toEqual(expect.objectContaining({
+            expect(review).toEqual(expect.objectContaining({
                 review_id: 1,
                 title: 'Agricola',
                 designer: 'Uwe Rosenberg',
@@ -200,29 +201,7 @@ describe('GET/api/reviews', () => {
             })
             expect(reviews).toBeSortedBy('created_at', {descending: true})
         })
-        
-
-
-
-        // expect(body.review).toEqual(expect.objectContaining({
-        //     review_id: 1,
-        //     title: 'Agricola',
-        //     designer: 'Uwe Rosenberg',
-        //     owner: 'mallionaire',
-        //     review_img_url:
-        //       'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-        //     review_body: 'Farmyard fun!',
-        //     category: 'euro game',
-        //     created_at: "2021-01-18T10:00:20.514Z",
-        //     votes: 1
-        // }));
-
-
-
-
-
     });
-
     it('404: "Route not found" message when given incorrect url', () => {
         return request(app).get('/api/noreviewshereboss').expect(404)
         .then(response => {
