@@ -185,22 +185,42 @@ describe('GET/api/reviews', () => {
             expect(reviews.length).toBe(13);
             expect(Array.isArray(reviews)).toBe(true);
 
-            reviews.forEach(review => {
-                expect.objectContaining({
+            reviews.forEach( (review) => {
+                expect(review).toEqual(expect.objectContaining({
+                    owner: expect.any(String), //username from users table, same as author from comments table
                     title: expect.any(String),
-                    designer: expect.any(String),
-                    owner: expect.any(String),
+                    review_id: expect.any(Number),
+                    category: expect.any(String),
                     review_img_url:expect.any(String),
-                    review_body:expect.any(String),
-                    review: expect.any(String),
                     created_at: expect.any(String),
                     votes: expect.any(Number),
                     comment_count: expect.any(Number)
-                })
+                }))
+
             })
             expect(reviews).toBeSortedBy('created_at', {descending: true})
         })
         
+
+
+
+        // expect(body.review).toEqual(expect.objectContaining({
+        //     review_id: 1,
+        //     title: 'Agricola',
+        //     designer: 'Uwe Rosenberg',
+        //     owner: 'mallionaire',
+        //     review_img_url:
+        //       'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+        //     review_body: 'Farmyard fun!',
+        //     category: 'euro game',
+        //     created_at: "2021-01-18T10:00:20.514Z",
+        //     votes: 1
+        // }));
+
+
+
+
+
     });
 
     it('404: "Route not found" message when given incorrect url', () => {
