@@ -1,14 +1,20 @@
+const { result } = require('lodash');
 const db = require('../db/connection')
 
 //#4
 exports.fetchReviewById = ({review_id}) => {
-    return db.query('SELECT * FROM reviews WHERE review_id = $1', [review_id])
-    .then(result => {
+
+    const promiseArray = [db.query('SELECT * FROM reviews WHERE review_id = $1;', [review_id]),
+                        db.query('SELECT * FROM comments WHERE review_id = $1', [review_id])];
+
+    return Promise.all(promiseArray)
+    .then(results => {
         //reject promise if :review_id is not found (result array is empty)
-        if (!result.rows.length) {
+        if (!results[0].rows.length) {
             return Promise.reject({status: 404, msg: 'ID Not Found'});
         }
-        return result.rows[0];
+        results[0].rows[0].comment_count = results[1].rows.length;
+        return results[0].rows[0];
     })
 }
 
