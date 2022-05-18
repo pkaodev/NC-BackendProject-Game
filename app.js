@@ -1,12 +1,9 @@
 const express = require('express');
 
-
 //import controllers
-const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment} = require('./controllers');
 
 const app = express();
-
-//potentially useful later on
 app.use(express.json());
 
 //#3 Responds with an array of category objects with slug and description properties
@@ -27,6 +24,14 @@ app.get('/api/reviews', getReviews);
 //#9
 app.get('/api/reviews/:review_id/comments', getCommentsForReview);
 
+//#10
+app.post('/api/reviews/:review_id/comments', postComment);
+
+
+
+
+
+//ERROR HANDLERS - move to own file
 
 //error handler for incorrect url (404: Route not found)
 app.all('/*', (req, res) => {
@@ -48,6 +53,8 @@ app.use((err, req, res, next) => {
         case '22P02':
             res.status(400).send({msg: 'Invalid Input'});
         case '23502':
+            res.status(400).send({msg: 'Invalid Input'});
+        case '23503':
             res.status(400).send({msg: 'Invalid Input'});
         }
     next(err)
