@@ -64,7 +64,7 @@ describe('GET/api/reviews/:review_id', () => {
             }));
         })
     });
-    it('404: "ID Not Found" when given unusede number for :review_id', () => {
+    it('404: "ID Not Found" when given unused number for :review_id', () => {
         return request(app).get('/api/reviews/12345').expect(404)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'ID Not Found'});
@@ -206,6 +206,46 @@ describe('GET/api/reviews', () => {
         return request(app).get('/api/noreviewshereboss').expect(404)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Route not found'})
+        })
+    });
+});
+//#9
+describe('GET/api/reviews/:review_id/comments', () => {
+    it('200: responds with a comments object containing an array of comment objects', () => {
+        return request(app).get('/api/reviews/2/comments').expect(200)
+        .then( ({body}) => {
+            const {comments} = body;
+            expect(comments.length).toBe(3);
+            expect(Array.isArray(comments)).toBe(true);
+
+            comments.forEach( (comment) => {
+                expect(comment).toEqual(expect.objectContaining({
+                    comment_id: expect.any(Number),
+                    review_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    author: expect.any(String),
+                    body:expect.any(String),
+                    created_at: expect.any(String),
+                }))
+            })
+        })
+    });
+    it('404: "Resource Not Found" when given number that does not match a :review_id', () => {
+        return request(app).get('/api/reviews/99999999/comments').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Resource Not Found'})
+        })
+    });
+    it('400: "Invalid Input" when given a non-number as :review_id ', () => {
+        return request(app).get('/api/reviews/notanumber/comments').expect(400)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
+        })
+    });
+    it('200: "No Comments Found" when no comments exist for given :review_id', () => {
+        return request(app).get('/api/reviews/1/comments').expect(200)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({comments: [{}]})
         })
     });
 });

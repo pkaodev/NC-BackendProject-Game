@@ -1,23 +1,18 @@
 const db = require('../db/connection')
-
-//takes review_id as argument and RETURNS PROMISE returning comment_count
-// exports.fetchCommentsCount = ({review_id}) => {
-//     return db.query('SELECT * FROM comments WHERE review_id=$1;', [review_id])
-//     .then( response => {
-//         // console.log('From fetchCommentsCount', response.rows.length)
-//         return response.rows.length;
-//     })
-// }
+const {checkIfDataExists} = require('./utility.model')
 
 
-//DEPRECATED(but want to keep for reference)returns promise returning look-up object for {review_id: comment_count} pairs for all reviews 
-// exports.fetchCCLookUp = () => {
-//     return db.query('SELECT * FROM comments')
-//     .then( (result) => {
-//         const lookUpObj = {};
+exports.fetchCommentsForReview = async ({review_id}) => {
+    const comments = await db.query('SELECT * FROM comments WHERE review_id = $1;', [review_id]);
 
-//         result.rows.forEach(comment => {lookUpObj[`${comment.review_id}`] ? lookUpObj[`${comment.review_id}`] ++ : lookUpObj[`${comment.review_id}`] = 1;})
+    //if no comments found
+    if (!comments.rows.length) {
 
-//         return lookUpObj;
-//     })
-// }
+        //check if review_id exists, reject if not
+        await checkIfDataExists('reviews', 'review_id', review_id);
+
+        //valid review_id but no comments
+        return [{}];
+    }
+    return comments.rows;
+}

@@ -2,7 +2,7 @@ const express = require('express');
 
 
 //import controllers
-const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview} = require('./controllers');
 
 const app = express();
 
@@ -23,6 +23,9 @@ app.get('/api/users', getUsers);
 
 //#8
 app.get('/api/reviews', getReviews);
+
+//#9
+app.get('/api/reviews/:review_id/comments', getCommentsForReview);
 
 
 //error handler for incorrect url (404: Route not found)
