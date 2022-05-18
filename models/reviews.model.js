@@ -1,4 +1,6 @@
 const db = require('../db/connection')
+const format = require('pg-format');
+const { checkIfDataExists } = require('./utility.model');
 
 //#4
 exports.fetchReviewById = ({review_id}) => {
@@ -25,53 +27,27 @@ exports.updateReviewVotes = ({review_id}, {inc_votes}) => {
 
 //#8
 exports.fetchReviews = async (reqQuery) => {
-
     let queryString = `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comment_id)::int AS comment_count
                         FROM reviews
                         LEFT JOIN comments
                         ON reviews.review_id = comments.review_id
                         GROUP BY reviews.review_id`;
 
-    const validCategories = ['social deduction', 'euro game', 'dexterity'];
-    const validSortBy = ['owner', 'title', 'category', 'review_img_url', 'comment_count'];
-    const validSortByReviews = ['review_id', 'created_at', 'votes'];
-    
     //category
     if (reqQuery.category) {
-        if (validCategories.includes(reqQuery.category)) {
-            queryString += ` HAVING category = '${reqQuery.category}'`;
-            //else category is not valid
-        } else {
-            return Promise.reject({status: 404, msg: 'Invalid Input'});
-        }
+        queryString += format(' HAVING category = %L', reqQuery.category);
     }
-    
+
     //sort_by
     if (reqQuery.sort_by) {
-        if (validSortBy.includes(reqQuery.sort_by)) {
-            queryString += ` ORDER BY ${reqQuery.sort_by}`;
-        } else if (validSortByReviews.includes(reqQuery.sort_by)) {
-            queryString += ` ORDER BY reviews.${reqQuery.sort_by}`;
-            //else sort_by is not valid
-        } else {
-            return Promise.reject({status: 400, msg: 'Invalid Input'});
-        }
-    //else default to order by created_at
+        queryString += format(' ORDER BY reviews.%s', reqQuery.sort_by)
     } else {
         queryString += ' ORDER BY reviews.created_at';
     }
 
-
     //order
     if (reqQuery.order) {
-        if (reqQuery.order === 'ASC') {
-            queryString += ' ASC';
-        } else if (reqQuery.order === 'DESC') {
-            queryString += ' DESC';
-        //else order is not valid
-        } else {
-            return Promise.reject({status: 400, msg: 'Invalid Input'});
-        }
+        queryString += format(' %s', reqQuery.order);
     //else default to DESC
     } else {
         queryString += ' DESC';
@@ -79,5 +55,10 @@ exports.fetchReviews = async (reqQuery) => {
 
     const reviews = await db.query(queryString)
 
+    //if no results (non-existant category)
+    if (!reviews.rows.length) {
+        return Promise.reject({status: 404, msg: 'Invalid Input'});
+    }
+    
     return reviews.rows
 }

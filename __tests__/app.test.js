@@ -355,19 +355,19 @@ describe('Refactor: GET/api/reviews?sort_by=QUERY1&order=ASC/DESC&category=QUERY
             expect(reviews).toBeSortedBy('owner')
         })
     });
-    it('400: "" for invalid sort_by query', () => {
+    it('400: "Invalid Input" for invalid sort_by query', () => {
         return request(app).get('/api/reviews?sort_by=somethingelse').expect(400)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
         })
     });
-    it('400: "" for invalid order query', () => {
+    it('400: "Invalid Input" for invalid order query', () => {
         return request(app).get('/api/reviews?order=somethingelse').expect(400)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
         })
     });
-    it('404: "" for non-existant category', () => {
+    it('404: "Invalid Input" for non-existant category', () => {
         return request(app).get('/api/reviews?category=not%20a%20category').expect(404)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})

@@ -14,8 +14,7 @@ exports.checkIfDataExists = async (table, column, value) => {
         // return false;
         return Promise.reject({status: 404, msg: 'Resource Not Found'});
     }
-
-    const queryString = format('SELECT * FROM %I WHERE %I = $1;', table, column);
+    const queryString = format('SELECT * FROM %s WHERE %s = $1;', table, column);
     const queryResult = await db.query(queryString, [value]);
     
     //if value does not exist in specified table/column reject promise
