@@ -230,7 +230,7 @@ describe('GET/api/reviews/:review_id/comments', () => {
             })
         })
     });
-    it('404: "Review Not Found" when given number that does not match a :review_id', () => {
+    it('404: "Resource Not Found" when given number that does not match a :review_id', () => {
         return request(app).get('/api/reviews/99999999/comments').expect(404)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Resource Not Found'})
