@@ -303,3 +303,74 @@ describe('POST/api/reviews/:review_id/comments', () => {
         })
     });
 });
+//#11
+describe('Refactor: GET/api/reviews?sort_by=QUERY1&order=ASC/DESC&category=QUERY3 queries', () => {
+    it('200: sorts by descending date as default', () => {
+        return request(app).get('/api/reviews').expect(200)
+        .then( ({body}) => {
+            const {reviews} = body;
+            expect(reviews.length).toBe(13);
+            expect(Array.isArray(reviews)).toBe(true);
+
+            expect(reviews).toBeSortedBy('created_at', {descending: true})
+        })
+    });
+    it('200: sorts by ascending when "order=ASC" is used', () => {
+        return request(app).get('/api/reviews?order=ASC').expect(200)
+        .then( ({body}) => {
+            const {reviews} = body;
+            expect(reviews.length).toBe(13);
+            expect(Array.isArray(reviews)).toBe(true);
+
+            expect(reviews).toBeSortedBy('created_at')
+        })
+    });
+    it('200: sorts by value used for "sort_by=" ', () => {
+        return request(app).get('/api/reviews?sort_by=owner').expect(200)
+        .then( ({body}) => {
+            const {reviews} = body;
+            expect(reviews.length).toBe(13);
+            expect(Array.isArray(reviews)).toBe(true);
+
+            expect(reviews).toBeSortedBy('owner', {descending: true})
+        })
+    });
+    it('200: filters to show only reviews using "category=" ', () => {
+        return request(app).get('/api/reviews?category=social%20deduction').expect(200)
+        .then( ({body}) => {
+            const {reviews} = body;
+            expect(reviews.length).toBe(11);
+            expect(Array.isArray(reviews)).toBe(true);
+
+            expect(reviews).toBeSortedBy('created_at', {descending: true})
+        })
+    });
+    it('200: handles all queries at once', () => {
+        return request(app).get('/api/reviews?sort_by=owner&order=ASC&category=social%20deduction').expect(200)
+        .then( ({body}) => {
+            const {reviews} = body;
+            expect(reviews.length).toBe(11);
+            expect(Array.isArray(reviews)).toBe(true);
+
+            expect(reviews).toBeSortedBy('owner')
+        })
+    });
+    it('400: "" for invalid sort_by query', () => {
+        return request(app).get('/api/reviews?sort_by=somethingelse').expect(400)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
+        })
+    });
+    it('400: "" for invalid order query', () => {
+        return request(app).get('/api/reviews?order=somethingelse').expect(400)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
+        })
+    });
+    it('404: "" for non-existant category', () => {
+        return request(app).get('/api/reviews?category=not%20a%20category').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
+        })
+    });
+});
