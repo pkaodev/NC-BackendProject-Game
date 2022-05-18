@@ -211,7 +211,7 @@ describe('GET/api/reviews', () => {
 });
 //#9
 describe('GET/api/reviews/:review_id/comments', () => {
-    it('200: responds with a comments object containing an array of comment objects', () => {
+    it('200: responds with a comments object containing an array of comment objects for given :review_id', () => {
         return request(app).get('/api/reviews/2/comments').expect(200)
         .then( ({body}) => {
             const {comments} = body;
@@ -369,6 +369,35 @@ describe('Refactor: GET/api/reviews?sort_by=QUERY1&order=ASC/DESC&category=QUERY
     });
     it('404: "Invalid Input" for non-existant category', () => {
         return request(app).get('/api/reviews?category=not%20a%20category').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
+        })
+    });
+});
+//#12
+describe('DELETE/api/comments/:comment_id', () => {
+    it.only('204: removes comment with :comment_id', () => {
+        return request(app).delete('/api/comments/1').expect(204)
+        .then( () => {
+        //using this get request to check if comments have decreased 3-->2
+        return request(app).get('/api/reviews/2/comments')})
+        .then( ({body}) => {
+            const {comments} = body;
+            //sometimes failing (gets 3 instead of 2)
+            //still gets 204, so guessing this is checked before the original delete request has gone through
+            expect(comments.length).toBe(2);
+        })
+    });
+
+    it('404: "Resource Not Found" if :comment_id does not exist', () => {
+        return request(app).delete('/api/comments/12345').expect(404)
+        .then(response => {
+            expect(JSON.parse(response.text)).toEqual({msg: 'Resource Not Found'})
+        })
+    });
+
+    it('400: "Invalid Input" if :comment_id contains any non-number characters', () => {
+        return request(app).delete('/api/comments/notanumber').expect(400)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
         })

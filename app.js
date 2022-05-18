@@ -1,7 +1,7 @@
 const express = require('express');
 
 //import controllers
-const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment, deleteComment} = require('./controllers');
 
 const app = express();
 app.use(express.json());
@@ -26,6 +26,9 @@ app.get('/api/reviews/:review_id/comments', getCommentsForReview);
 
 //#10
 app.post('/api/reviews/:review_id/comments', postComment);
+
+//#12
+app.delete('/api/comments/:comment_id', deleteComment);
 
 
 
