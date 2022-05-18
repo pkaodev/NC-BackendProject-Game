@@ -11,15 +11,12 @@ exports.getCommentsForReview = (req, res, next) => {
 }
 
 //#10
-exports.postComment = (req, res, next) => {
-    //add asyncs
-    // const comment = await createComment(req.params, req.body)
-    // res.status(201).send({comment})
-
+exports.postComment = async (req, res, next) => {
     createComment(req.params, req.body)
-    .then ( (comment) => {
+    .then (comment => {
         res.status(201).send({comment})
     })
     .catch(next)
+
 
 }
