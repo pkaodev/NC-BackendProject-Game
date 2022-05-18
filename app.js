@@ -56,6 +56,11 @@ app.use((err, req, res, next) => {
             res.status(400).send({msg: 'Invalid Input'});
         case '23503':
             res.status(400).send({msg: 'Invalid Input'});
+        case '42601':
+            res.status(400).send({msg: 'Invalid Input'});
+        case '42703':
+            res.status(400).send({msg: 'Invalid Input'});
+
         }
     next(err)
 })

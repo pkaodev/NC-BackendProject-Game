@@ -25,7 +25,7 @@ exports.patchReviewVotes = (req, res, next) => {
 
 //#8
 exports.getReviews = (req, res, next) => {
-    fetchReviews().then(reviews => {
+    fetchReviews(req.query).then(reviews => {
         res.status(200).send({reviews});
     })
     .catch(next)

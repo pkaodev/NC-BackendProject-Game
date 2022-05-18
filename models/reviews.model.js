@@ -1,4 +1,6 @@
 const db = require('../db/connection')
+const format = require('pg-format');
+const { checkIfDataExists } = require('./utility.model');
 
 //#4
 exports.fetchReviewById = ({review_id}) => {
@@ -24,16 +26,39 @@ exports.updateReviewVotes = ({review_id}, {inc_votes}) => {
 }
 
 //#8
-exports.fetchReviews = () => {
-    return db.query(
-        `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comment_id)::int AS comment_count
-        FROM reviews
-        LEFT JOIN comments
-        ON reviews.review_id = comments.review_id
-        GROUP BY reviews.review_id
-        ORDER BY reviews.created_at DESC;`
-        )
-    .then( (result) => {
-        return result.rows;
-    })
+exports.fetchReviews = async (reqQuery) => {
+    let queryString = `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comment_id)::int AS comment_count
+                        FROM reviews
+                        LEFT JOIN comments
+                        ON reviews.review_id = comments.review_id
+                        GROUP BY reviews.review_id`;
+
+    //category
+    if (reqQuery.category) {
+        queryString += format(' HAVING category = %L', reqQuery.category);
+    }
+
+    //sort_by
+    if (reqQuery.sort_by) {
+        queryString += format(' ORDER BY reviews.%s', reqQuery.sort_by)
+    } else {
+        queryString += ' ORDER BY reviews.created_at';
+    }
+
+    //order
+    if (reqQuery.order) {
+        queryString += format(' %s', reqQuery.order);
+    //else default to DESC
+    } else {
+        queryString += ' DESC';
+    }
+
+    const reviews = await db.query(queryString)
+
+    //if no results (non-existant category)
+    if (!reviews.rows.length) {
+        return Promise.reject({status: 404, msg: 'Invalid Input'});
+    }
+    
+    return reviews.rows
 }
