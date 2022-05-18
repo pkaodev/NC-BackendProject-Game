@@ -6,5 +6,7 @@ const {fetchCommentsForReview} = require('./comments.model')
 const {fetchCategories} = require('./categories.model')
 //users
 const {fetchUsers} = require('./users.model')
+//utility
+const {checkIfDataExists} = require('./utility.model')
 
-module.exports = {fetchReviewById, fetchCategories, updateReviewVotes, fetchUsers, fetchReviews, fetchCommentsForReview};
+module.exports = {fetchReviewById, fetchCategories, updateReviewVotes, fetchUsers, fetchReviews, fetchCommentsForReview, checkIfDataExists};

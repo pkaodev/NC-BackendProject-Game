@@ -230,14 +230,14 @@ describe('GET/api/reviews/:review_id/comments', () => {
             })
         })
     });
-    it.only('404: "Review Not Found" when given number that does not match a :review_id', () => {
+    it('404: "Review Not Found" when given number that does not match a :review_id', () => {
         return request(app).get('/api/reviews/99999999/comments').expect(404)
         .then(response => {
-            expect(JSON.parse(response.text)).toEqual({msg: 'Review Not Found'})
+            expect(JSON.parse(response.text)).toEqual({msg: 'Resource Not Found'})
         })
     });
     it('400: "Invalid Input" when given a non-number as :review_id ', () => {
-        return request(app).get('/api/reviews/notanumber/comments').expect(404)
+        return request(app).get('/api/reviews/notanumber/comments').expect(400)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
         })
@@ -245,7 +245,7 @@ describe('GET/api/reviews/:review_id/comments', () => {
     it('200: "No Comments Found" when no comments exist for given :review_id', () => {
         return request(app).get('/api/reviews/1/comments').expect(200)
         .then(response => {
-            expect(JSON.parse(response.text)).toEqual({msg: 'No Comments Found'})
+            expect(JSON.parse(response.text)).toEqual({comments: [{}]})
         })
     });
 });

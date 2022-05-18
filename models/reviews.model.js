@@ -1,5 +1,4 @@
 const db = require('../db/connection')
-const {fetchCCLookUp} = require('./comments.model')
 
 //#4
 exports.fetchReviewById = ({review_id}) => {

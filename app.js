@@ -35,11 +35,11 @@ app.all('/*', (req, res) => {
 
 
 // error  helper
-app.use((err, req, res, next) => {
-    console.log('ERROR HELP IS HERE!')
-    console.log(err)
-    next(err)
-})
+// app.use((err, req, res, next) => {
+//     console.log('ERROR HELP IS HERE!')
+//     console.log(err)
+//     next(err)
+// })
 
 
 //error handler for postgres errors
