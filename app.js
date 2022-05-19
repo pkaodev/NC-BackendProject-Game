@@ -38,14 +38,12 @@ app.all('/*', (req, res) => {
     res.status(404).send({msg: 'Route not found'});
   });
 
-
 // error  helper
 // app.use((err, req, res, next) => {
 //     console.log('ERROR HELP IS HERE!')
 //     console.log(err)
 //     next(err)
 // })
-
 
 //error handler for postgres errors
 app.use((err, req, res, next) => {
@@ -77,5 +75,13 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
     res.status(500).send({msg: 'Server error'});
 })
+
+//listen to PORT
+const { PORT = 12345 } = process.env;
+
+app.listen(PORT, (err) => {
+  if (err) throw err;
+  console.log(`Listening on ${PORT}...`);
+});
 
 module.exports = app;
