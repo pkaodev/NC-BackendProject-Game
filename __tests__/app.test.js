@@ -378,7 +378,7 @@ describe('Refactor: GET/api/reviews?sort_by=QUERY1&order=ASC/DESC&category=QUERY
 describe('DELETE/api/comments/:comment_id', () => {
 
 
-        it.only('204: removes comment with :comment_id', () => {
+        it('204: removes comment with :comment_id', () => {
             return request(app).delete('/api/comments/1').expect(204)
             .then( () => {
              return request(app).get('/api/reviews/2/comments')})

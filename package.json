@@ -10,7 +10,9 @@
     "seed": "node ./db/seeds/run-seed.js",
     "test": "clear && jest ./__tests__/app.test.js",
     "prepare": "husky install",
-    "insomtest": "nodemon ./app-controllers-models/app.js"
+    "insomtest": "nodemon ./app-controllers-models/app.js",
+    "seed:prod": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL) npm run seed",
+    "start": "node listen.js"
   },
   "repository": {
     "type": "git",
