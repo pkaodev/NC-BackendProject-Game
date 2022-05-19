@@ -376,19 +376,21 @@ describe('Refactor: GET/api/reviews?sort_by=QUERY1&order=ASC/DESC&category=QUERY
 });
 //#12
 describe('DELETE/api/comments/:comment_id', () => {
-    it.only('204: removes comment with :comment_id', () => {
-        return request(app).delete('/api/comments/1').expect(204)
-        .then( () => {
-        //using this get request to check if comments have decreased 3-->2
-        return request(app).get('/api/reviews/2/comments')})
-        .then( ({body}) => {
+
+
+        it.only('204: removes comment with :comment_id', () => {
+            return request(app).delete('/api/comments/1').expect(204)
+            .then( () => {
+            //using this get request to check if comments have decreased 3-->2
+             return request(app).get('/api/reviews/2/comments')})
+            .then( ({body}) => {
             const {comments} = body;
+            
             //sometimes failing (gets 3 instead of 2)
             //still gets 204, so guessing this is checked before the original delete request has gone through
             expect(comments.length).toBe(2);
         })
     });
-
     it('404: "Resource Not Found" if :comment_id does not exist', () => {
         return request(app).delete('/api/comments/12345').expect(404)
         .then(response => {
