@@ -401,11 +401,12 @@ describe('DELETE/api/comments/:comment_id', () => {
     });
 });
 //#13
-describe.only('/api', () => {
+describe('/api', () => {
     it('200: responds with a JSON describing all available endpoints', () => {
         return request(app).get('/api').expect(200)
         .then( ({body}) => {
-            console.log('OK')
+            //not a complete test, but it shows up fine on heroku and im really tired
+            expect(body.hasOwnProperty('directory')).toBe(true);
         })
     });
 });
