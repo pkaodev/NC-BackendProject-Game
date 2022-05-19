@@ -1,7 +1,7 @@
 const express = require('express');
 
 //import controllers
-const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment, deleteComment} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment, deleteComment, getAPI} = require('./controllers');
 
 const app = express();
 app.use(express.json());
@@ -29,6 +29,9 @@ app.post('/api/reviews/:review_id/comments', postComment);
 
 //#12
 app.delete('/api/comments/:comment_id', deleteComment);
+
+//#15
+app.get('/api', getAPI);
 
 
 //ERROR HANDLERS - move to own file
@@ -79,14 +82,14 @@ app.use((err, req, res, next) => {
 //listen to PORT
 
 
-// let PORT = process.env.PORT;
-// if (PORT == null || PORT == "") {
-//     PORT = 8000;
-// }
+let PORT = process.env.PORT;
+if (PORT == null || PORT == "") {
+    PORT = 8000;
+}
 
-// app.listen(PORT, (err) => {
-//   if (err) throw err;
-//   console.log(`Listening on ${PORT}...`);
-// });
+app.listen(PORT, (err) => {
+  if (err) throw err;
+  console.log(`Listening on ${PORT}...`);
+});
 
 module.exports = app;

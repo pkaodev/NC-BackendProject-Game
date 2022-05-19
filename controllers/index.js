@@ -6,5 +6,7 @@ const {getCommentsForReview, postComment, deleteComment} = require('./comments.c
 const {getCategories} = require('./categories.controller')
 //users
 const {getUsers} = require('./users.controller')
+//API
+const {getAPI} = require('./api.controller')
 
-module.exports = {getReviewById, getCategories, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment, deleteComment};
+module.exports = {getReviewById, getCategories, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment, deleteComment, getAPI};
