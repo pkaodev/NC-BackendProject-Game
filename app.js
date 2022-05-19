@@ -33,9 +33,6 @@ app.delete('/api/comments/:comment_id', deleteComment);
 //#15
 app.get('/api', getAPI);
 
-
-//ERROR HANDLERS - move to own file
-
 //error handler for incorrect url (404: Route not found)
 app.all('/*', (req, res) => {
     res.status(404).send({msg: 'Route not found'});
@@ -80,8 +77,6 @@ app.use((err, req, res, next) => {
 })
 
 //listen to PORT
-
-
 let PORT = process.env.PORT;
 if (PORT == null || PORT == "") {
     PORT = 8000;
