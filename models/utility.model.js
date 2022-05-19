@@ -7,8 +7,7 @@ const format = require('pg-format')
 exports.checkIfDataExists = async (table, column, value) => {
     //allowed tables/columns to query
     const allowedTables = ['reviews', 'users', 'categories', 'comments'];
-    const allowedColumns = ['body', 'votes', 'author', 'review_id', 'created_at', 'slug', 'description', 'title', 'designer', 'owner', 'review_img_url', 'review_body', 'category', 'avatar_url', 'username', 'name'];
-
+    const allowedColumns = ['body', 'votes', 'author', 'review_id', 'created_at', 'slug', 'description', 'title', 'designer', 'owner', 'review_img_url', 'review_body', 'category', 'avatar_url', 'username', 'name', 'comment_id'];
     //if table/column does not exist reject promise
     if (!allowedTables.includes(table) || !allowedColumns.includes(column)) {
         // return false;

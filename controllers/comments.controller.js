@@ -1,4 +1,4 @@
-const {fetchCommentsForReview, createComment} = require('../models')
+const {fetchCommentsForReview, createComment, removeComment} = require('../models')
 
 //#9
 exports.getCommentsForReview = (req, res, next) => {
@@ -7,7 +7,6 @@ exports.getCommentsForReview = (req, res, next) => {
         res.status(200).send({comments});
     })
     .catch(next)
-
 }
 
 //#10
@@ -17,6 +16,13 @@ exports.postComment = async (req, res, next) => {
         res.status(201).send({comment})
     })
     .catch(next)
+}
 
-
+//#12
+exports.deleteComment = (req, res, next) => {
+    removeComment(req.params)
+    .then( () => {
+        res.sendStatus(204);
+    })
+    .catch(next)
 }

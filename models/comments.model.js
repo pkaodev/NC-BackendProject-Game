@@ -37,3 +37,10 @@ exports.createComment = async ({review_id}, reqbody) => {
                                     RETURNING *;`)
     return comment.rows[0];
 }
+
+//#12
+exports.removeComment = async ({comment_id}) => {
+    //check if comment_id exists
+    await checkIfDataExists('comments', 'comment_id', comment_id )
+    return db.query('DELETE FROM comments WHERE comment_id = $1;', [comment_id]);
+}

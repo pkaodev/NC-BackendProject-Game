@@ -1,12 +1,12 @@
 const express = require('express');
 
 //import controllers
-const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment} = require('./controllers');
+const {getCategories, getReviewById, patchReviewVotes, getUsers, getReviews, getCommentsForReview, postComment, deleteComment} = require('./controllers');
 
 const app = express();
 app.use(express.json());
 
-//#3 Responds with an array of category objects with slug and description properties
+//#3
 app.get('/api/categories', getCategories);
 
 //#4
@@ -27,8 +27,8 @@ app.get('/api/reviews/:review_id/comments', getCommentsForReview);
 //#10
 app.post('/api/reviews/:review_id/comments', postComment);
 
-
-
+//#12
+app.delete('/api/comments/:comment_id', deleteComment);
 
 
 //ERROR HANDLERS - move to own file
@@ -38,14 +38,12 @@ app.all('/*', (req, res) => {
     res.status(404).send({msg: 'Route not found'});
   });
 
-
 // error  helper
 // app.use((err, req, res, next) => {
 //     console.log('ERROR HELP IS HERE!')
 //     console.log(err)
 //     next(err)
 // })
-
 
 //error handler for postgres errors
 app.use((err, req, res, next) => {
@@ -65,7 +63,6 @@ app.use((err, req, res, next) => {
     next(err)
 })
 
-  
 //error handler for personalised errors
 app.use((err, req, res, next) => {
     if (err.status && err.msg) {
@@ -78,5 +75,13 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
     res.status(500).send({msg: 'Server error'});
 })
+
+//listen to PORT
+const { PORT = 12345 } = process.env;
+
+app.listen(PORT, (err) => {
+  if (err) throw err;
+  console.log(`Listening on ${PORT}...`);
+});
 
 module.exports = app;
