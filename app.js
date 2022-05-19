@@ -77,7 +77,12 @@ app.use((err, req, res, next) => {
 })
 
 //listen to PORT
-const { PORT = 12345 } = process.env;
+// const { PORT = 12345 } = process.env;
+
+let PORT = process.env.PORT;
+if (PORT == null || PORT == "") {
+    PORT = 8000;
+}
 
 app.listen(PORT, (err) => {
   if (err) throw err;
