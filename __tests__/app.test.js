@@ -377,7 +377,6 @@ describe('Refactor: GET/api/reviews?sort_by=QUERY1&order=ASC/DESC&category=QUERY
 //#12
 describe('DELETE/api/comments/:comment_id', () => {
 
-
         it('204: removes comment with :comment_id', () => {
             return request(app).delete('/api/comments/1').expect(204)
             .then( () => {
@@ -398,6 +397,15 @@ describe('DELETE/api/comments/:comment_id', () => {
         return request(app).delete('/api/comments/notanumber').expect(400)
         .then(response => {
             expect(JSON.parse(response.text)).toEqual({msg: 'Invalid Input'})
+        })
+    });
+});
+//#13
+describe.only('/api', () => {
+    it('200: responds with a JSON describing all available endpoints', () => {
+        return request(app).get('/api').expect(200)
+        .then( ({body}) => {
+            console.log('OK')
         })
     });
 });

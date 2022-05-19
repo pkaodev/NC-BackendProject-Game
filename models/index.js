@@ -8,5 +8,7 @@ const {fetchCategories} = require('./categories.model')
 const {fetchUsers} = require('./users.model')
 //utility
 const {checkIfDataExists} = require('./utility.model')
+//api
+const {reallyGetAPI} = require('./api.model')
 
-module.exports = {fetchReviewById, fetchCategories, updateReviewVotes, fetchUsers, fetchReviews, fetchCommentsForReview, checkIfDataExists, createComment, removeComment};
+module.exports = {fetchReviewById, fetchCategories, updateReviewVotes, fetchUsers, fetchReviews, fetchCommentsForReview, checkIfDataExists, createComment, removeComment, reallyGetAPI};
